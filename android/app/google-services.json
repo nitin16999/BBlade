@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "922046891520",
+    "project_id": "barberblade-ba9c1",
+    "storage_bucket": "barberblade-ba9c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922046891520:android:aa1f611206c7e06b0afae5",
+        "android_client_info": {
+          "package_name": "com.bblade"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "922046891520-ijsioosmhid68cj9c4dsjldb4lg555d5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAukF0pYCYJeqz46Mj0J5FxR5u8j52uMPg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922046891520-ijsioosmhid68cj9c4dsjldb4lg555d5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
