@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "barberblade-ba9c1",
+  "private_key_id": "eab998d6e14b110a6c82d0881cd50236abea2b84",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJ4Iy0K4rxg0NX\naPkqp+4hywepOAv269yHS24LrChjby5lv2xM/NTxRsp/i9S3PDIhgpGPWxN9ojiF\nUuoX0ifFKR2ojFCjgXLK8qe3p831M+8LoezDC3JWt/Sx05EzxVJH4KoRlg0AiDco\nHkT4KdzF59OnudK/PyjtZ5VO8NzuBL79Ag3EPqI1gTdZv5RBVsqmUXC0x4ExKQVK\ntsdzrBZxma8VZ/m/csrX7ux1Aycbrsfb2iQUv2OQq1MStgV9wJk3rD/soj0UQlXu\nxjMBvzEqqE3XfMXREdzN4mPCbkCkfkPL0M1Im1ayXr83jT1qXS5bGuSALlMmOBw1\nb8TayeFJAgMBAAECggEAYEpSYqe4PM1C5CEGZBG4dHbufwjkMBE9XW0dnsSteQwx\ngcel5Szddv4wnVi5i/LS6IfqXQnwiIbFVdaAIP+VB6Y+ZsQSvIKEmgfW9rM7+j6c\nwRwpnbjKf1F8DgvfYOW4At/Gzt+W8Q+H24Ngm0wAaYdTvddVDfKW13IGViJuBrrz\nxnfyU6+hS7Dt9hmnxQSP4h56bfQJcgAcXRqdeoch7QN+g5Ii4CXkAJxCeR1X1ovs\nuDSZKPOGZLZpGZx0yyM7Q8VsbJrr0c+FUpR6zhB9gdQKSN2WF/b7NOIt9+OHLMic\nq1D1vfjc9p7pvhGK85oLIYTUbMSKEMwR7k7EhkzBZwKBgQD8BvvO+USf77GQEYuG\nbGdq2QLL0Oo6HdIVoymG5OYAAWQh+RWEqFfPnw1bsO8WUpKjL94ANOsH7D0AKo8E\nwvXoo1/DV52FP95mJVnZwYJrmrmKj/kiXV3EDaTJ53S+DuVJfcb841MuN7Q2GXnX\nqha3IvTZsgSfn3nXtzl4UhYK1wKBgQDNDzFq/69EeFBjH+XQAO9Aj8W5KOG5shSc\nRGOmFxANNSF2TWR1V4BdwiSyxRIhDx2l32AmyyIT5F45jUwmuFOWH4Cl7CoN/26B\nD0kU2g3wfj4xI2hgPYAoS7V7/vBcpNcJyrKwgIxIeLwEajDa30bVEx/II0fmxgbM\n2GOnYj8Q3wKBgASOl8UBStVdfydsucofcatD60IGMAYG/gJ4JcsTnnkHjWjz2QjC\nBnxxkstCosATlCUxO2Fjk5BcHCpBmr5qTAn90kB0+BstsXbFXB+M2S/a51nzCn0t\nlQFzgbRI5Bp/qHOwu4VdEub2COMliMd2gtyi3CyHhH/iYVCeNoLPcSiXAoGAOaDV\ncI6ewQ1W+iSSv1wj4O8G0DyPA1Lqu+f0YU8F8dBGsSqa2udWagMPsTX1HFlVKbKX\nIQ/hadm6KU5uYktXIk+EJh0yzHBGq/qRvUxysm2oKMMcqD9gbvKn9Er3XfHthRD0\nGuplglB79nmpdTlefK89NU/E+zQX4SXHC9lug90CgYEA7PaA7wlYKEOrcieGBRHT\nK8hbA4CA38YDyJgsOMc9cwvUME1RSD13+DacGTOMMFsWDg80lZd0Dsx3JJvsWezk\ns/cjdIuBdgEgyvG8aAkO7Kg+ojEnu703KMdsmH4PktDmupaKY6XcPAYpI0zBSQEn\nfni7fhmsqU3QrwfXokSyyx0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "bbalde@barberblade-ba9c1.iam.gserviceaccount.com",
+  "client_id": "100378796130644023084",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bbalde%40barberblade-ba9c1.iam.gserviceaccount.com"
+}
