@@ -20,6 +20,8 @@ const AdminProfile = (props) => {
   //called every time page is refreshed
   useEffect(() => {
     getAsyncData()
+
+    console.log(auth().currentUser)
   }, []);
 
 

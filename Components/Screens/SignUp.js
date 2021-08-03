@@ -3,19 +3,22 @@ import { StyleSheet, Text, StatusBar, View, TouchableOpacity, Image, TextInput, 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CardView from 'react-native-cardview';
-import auth from "@react-native-firebase/auth"
+import auth, { firebase } from "@react-native-firebase/auth"
 import firestore from "@react-native-firebase/firestore"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from "@react-native-picker/picker";
 
 export default class SignUp extends Component {
 
     state = {
+        customer: true,
         emailText: '',
         nameText: '',
         phoneText: '',
         eye: true, eyeoff: false, visible: true,
         passwordRule: false,
         password: '',
+        signUpMode: "Customer"
     }
 
     eye_funnction = () => {
@@ -68,46 +71,88 @@ export default class SignUp extends Component {
             this.setState({ passwordRule: false })
         }
     }
-    SignUpUser = async () => {
-        //checking for the error in the input fields
-        if (this.nameValidate()) {
-            if (this.phoneValidate()) {
-                if (this.emailValidate()) {
-                    if (this.passwordValidate()) {
-                        //checking if firestore already has the email entry 
-                        const ID = await firestore().collection("Customer").where("email", "==", this.state.emailText).get();
-                        if (ID.empty) {
-                            //check if auth storage has similar email id  
-                            auth().createUserWithEmailAndPassword(this.state.emailText, this.state.password)
-                                .then(async (cred) => {
-                                    try {
-                                        await AsyncStorage.setItem('@user_role', "Customer")
-                                        await AsyncStorage.setItem('@user_id', cred.user.uid)
-                                        firestore().collection("Customer").doc(cred.user.uid).set({
-                                            name: this.state.nameText,
-                                            email: this.state.emailText,
-                                            phone: this.state.phoneText
-                                        }).then(() => {
-                                            this.props.navigation.navigate("CustomerHome")
-                                        }).catch(() => {
-                                            Alert.alert("Something went wrong","Plase check your network connect or please try again.")
-                                        })
 
-                                    } catch (e) {
-                                        Alert.alert("Something went Wrong","Plase check your network connect or please try again.")
-                                    }
-                                })
-                                .catch((error) => {
-                                    if (error.code == "auth/email-already-in-use") {
-                                        Alert.alert("Account already exist", "An account with this email address alredy exist. Please try with a new email address or try joining with this email by login method.")
-                                    }
-                                })
-                        }
-                        else { Alert.alert("Account already exist", "An account with this email address alredy exist. Please try with a new email address or try joining with this email by login method.") }
-                    } else { Alert.alert("Enter Valid Password ", "Plase read the Password-Rules given bellow the password textbox. This is necessary to create a strong password for your account. "+ this.state.password) }
-                } else { Alert.alert("Signup Failed","Enter Valid Email please") }
-            } else { Alert.alert("Signup Failed","Enter Valid Phone number Please.") }
-        } else { Alert.alert("Signup Failed","Enter Valid Name Please") }
+    SignUpUser = async () => {
+
+        // If the user is customer
+        if (this.state.signUpMode == "Customer") {
+
+            //checking for the error in the input fields
+            if (this.nameValidate()) {
+                if (this.phoneValidate()) {
+                    if (this.emailValidate()) {
+                        if (this.passwordValidate()) {
+                            //checking if firestore already has the email entry 
+                            const ID = await firestore().collection("Customer").where("email", "==", this.state.emailText).get();
+                            if (ID.empty) {
+                                //check if auth storage has similar email id  
+                                auth().createUserWithEmailAndPassword(this.state.emailText, this.state.password)
+                                    .then(async (cred) => {
+                                        try {
+                                            await AsyncStorage.setItem('@user_role', "Customer")
+                                            await AsyncStorage.setItem('@user_id', cred.user.uid)
+                                            firestore().collection("Customer").doc(cred.user.uid).set({
+                                                name: this.state.nameText,
+                                                email: this.state.emailText,
+                                                phone: this.state.phoneText
+                                            }).then(() => {
+                                                this.props.navigation.navigate("CustomerHome")
+                                            }).catch(() => {
+                                                Alert.alert("Something went wrong", "Plase check your network connect or please try again.")
+                                            })
+
+                                        } catch (e) {
+                                            Alert.alert("Something went Wrong", "Plase check your network connect or please try again.")
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        if (error.code == "auth/email-already-in-use") {
+                                            Alert.alert("Account already exist", "An account with this email address alredy exist. Please try with a new email address or try joining with this email by login method.")
+                                        }
+                                    })
+                            }
+                            else { Alert.alert("Account already exist", "An account with this email address alredy exist. Please try with a new email address or try joining with this email by login method.") }
+                        } else { Alert.alert("Enter Valid Password ", "Please read the Password-Rules given bellow the password textbox. This is necessary to create a strong password for your account. " + this.state.password) }
+                    } else { Alert.alert("Signup Failed", "Enter Valid Email please") }
+                } else { Alert.alert("Signup Failed", "Enter Valid Phone number Please.") }
+            } else { Alert.alert("Signup Failed", "Enter Valid Name Please") }
+        }
+        else if (this.state.signUpMode == "Barber") {
+            //checking for the error in the input fields
+            if (this.emailValidate()) {
+                if (this.passwordValidate()) {
+                    //checking if firestore already has the email entry 
+                    const ID = await firestore().collection("Barber").where("email", "==", this.state.emailText).get();
+                    if (ID.empty) {
+                        Alert.alert("SignUp Failed", "This email address isn't registered, Contact the Admin for further enquiry")
+                    } else {
+                        //check if auth storage has similar email id  
+                        auth().createUserWithEmailAndPassword(this.state.emailText, this.state.password)
+                            .then(async (cred) => {
+                                try {
+                                    await AsyncStorage.setItem('@user_role', "Barber")
+                                    await AsyncStorage.setItem('@user_id', cred.user.uid)
+                                    firestore().collection("Customer").doc(this.state.emailText).set({
+                                        id: cred.user.uid
+                                    }).then(() => {
+                                        this.props.navigation.navigate("BarberHome")
+                                    }).catch(() => {
+                                        Alert.alert("Something went wrong", "Plase check your network connect or please try again.")
+                                    })
+                                } catch (e) {
+                                    Alert.alert("Something went Wrong", "Plase check your network connect or please try again.")
+                                }
+                            })
+                            .catch((error) => {
+                                if (error.code == "auth/email-already-in-use") {
+                                    Alert.alert("Account already exist", "An account with this email address alredy exist. Please try to reset the password of this email address and again login.")
+                                }
+                            })
+                    }
+
+                } else { Alert.alert("Enter Valid Password ", "Please read the Password-Rules given bellow the password textbox. This is necessary to create a strong password for your account. " + this.state.password) }
+            } else { Alert.alert("Signup Failed", "Enter Valid Email please") }
+        }
     }
 
     render() {
@@ -124,30 +169,42 @@ export default class SignUp extends Component {
                         cornerRadius={40}
                         style={{
                             width: wp("93%"),
-                            height: hp("33.5%"),
+                            //height: hp("40%"),
                             backgroundColor: "#fff",
-                            paddingVertical: 10,
-                            paddingHorizontal: 10,
                             justifyContent: "center",
                             alignItems: "center"
                         }}>
-
-                        <TextInput style={styles.inputBox}
-                            placeholder="Name"
-                            placeholderTextColor="#000"
-                            selectionColor="#D0D0D0"
-                            color="#000"
-                            keyboardType='default'
-                            onChangeText={nameText => this.setState({ nameText })}
-                        />
-                        <TextInput style={styles.inputBox}
-                            placeholder="Phone Number"
-                            placeholderTextColor="#000"
-                            selectionColor="#D0D0D0"
-                            color="#000"
-                            keyboardType='phone-pad'
-                            onChangeText={phoneText => this.setState({ phoneText })}
-                        />
+                        <View flexDirection='row' style={{ alignItems: "center", justifyContent: "center", marginTop: 10 }}>
+                            <Text style={{ color: "#000", fontSize: 20, marginLeft: 14, marginRight: 16, fontWeight: "bold" }}>SignUp As: </Text>
+                            <TouchableOpacity style={styles.pickerBox}>
+                                <Picker style={{ color: "#000", fontSize: 17 }} selectedValue={this.state.signUpMode} onValueChange={(itemValue, itemIndex) => this.setState({ signUpMode: itemValue })} >
+                                    <Picker.Item style={{ color: "#fff", fontSize: 17 }} label="a Customer" value="Customer" />
+                                    <Picker.Item style={{ color: "#fff", fontSize: 17 }} label="a Barber" value="Barber" />
+                                </Picker>
+                            </TouchableOpacity>
+                        </View>
+                        {
+                            this.state.signUpMode == "Customer" ?
+                                <View>
+                                    <TextInput style={styles.inputBox}
+                                        placeholder="Name"
+                                        placeholderTextColor="#000"
+                                        selectionColor="#D0D0D0"
+                                        color="#000"
+                                        keyboardType='default'
+                                        onChangeText={nameText => this.setState({ nameText })}
+                                    />
+                                    <TextInput style={styles.inputBox}
+                                        placeholder="Phone Number"
+                                        placeholderTextColor="#000"
+                                        selectionColor="#D0D0D0"
+                                        color="#000"
+                                        keyboardType='phone-pad'
+                                        onChangeText={phoneText => this.setState({ phoneText })}
+                                    />
+                                </View>
+                                : null
+                        }
                         <TextInput style={styles.inputBox}
                             placeholder="Email"
                             placeholderTextColor="#000"
@@ -156,7 +213,7 @@ export default class SignUp extends Component {
                             keyboardType='email-address'
                             onChangeText={emailText => this.setState({ emailText })}
                         />
-                        <View flexDirection='row' style={{ alignItems: "center", justifyContent: "center" }}>
+                        <View flexDirection='row' style={{ alignItems: "center", justifyContent: "center", marginBottom: 10 }}>
                             <TextInput style={styles.inputBox1}
                                 placeholder="Password"
                                 placeholderTextColor="#000"
@@ -192,7 +249,7 @@ export default class SignUp extends Component {
                             this.state.passwordRule ? <Text style={{ paddingVertical: 0, fontSize: 17, color: '#000', fontWeight: "bold" }}>It should not contain a space in between.</Text> : null
                         }
                     </View>
-                    <TouchableOpacity style={styles.button}
+                    <TouchableOpacity style={[styles.button]}
                         onPress={this.SignUpUser}>
                         <Text style={styles.buttonText}>SignUp</Text>
                     </TouchableOpacity>
@@ -223,7 +280,7 @@ const styles = StyleSheet.create({
         width: wp('65%'),
         backgroundColor: '#000',
         borderRadius: 25,
-        marginTop: 80,
+        marginTop: 50,
         marginBottom: 50,
         paddingVertical: 12,
         alignSelf: 'center'
@@ -259,6 +316,15 @@ const styles = StyleSheet.create({
         paddingVertical: 9,
         paddingHorizontal: 11,
         marginLeft: 8
+    },
+    pickerBox: {
+        width: wp('50%'),
+        backgroundColor: 'rgba(40, 40,40,0.15)',
+        borderRadius: 25,
+        paddingHorizontal: 16,
+        fontSize: 17,
+        color: '#fff',
+        marginLeft: 30
     }
 });
 

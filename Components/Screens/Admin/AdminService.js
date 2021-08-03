@@ -4,8 +4,9 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import LinearGradient from 'react-native-linear-gradient';
 import { Picker } from "@react-native-picker/picker";
 import CardView from 'react-native-cardview';
-import firestore from "@react-native-firebase/firestore"
+import firestore from "@react-native-firebase/firestore";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const AdminService = () => {
   //console.disableYellowBox = true;
   const [allServiceScreen, setallServiceScreen] = useState(false)
@@ -70,6 +71,7 @@ const AdminService = () => {
               if (userRole == "Admin") {
                 const service = await firestore().collection("Service").where("name", "==", serviceName).get();
                 if (service.empty) {
+
                   firestore().collection("Service").doc(serviceName).set({
                     name: serviceName,
                     price: servicePrice,
@@ -81,6 +83,7 @@ const AdminService = () => {
                   ).catch((error) => {
                     Alert.alert("Something went wrong", error.message)
                   })
+                  
                 } else {
                   Alert.alert("Action Failed!", "Service with the same name is already available")
                 }
@@ -141,7 +144,7 @@ const AdminService = () => {
                           alignItems: "center",
                           paddingVertical: 0,
                           marginVertical: 25,
-                          marginHorizontal: 10,
+                          marginHorizontal: 8,
                           backgroundColor: "#fff"
                         }}>
                         <Text style={{ color: "#000", fontSize: 24, fontWeight: "bold" }}>{value.name}</Text>
@@ -185,7 +188,7 @@ const AdminService = () => {
                   cornerRadius={40}
                   style={{
                     width: wp("94%"),
-                    height: hp("50%"),
+                    height: hp("49%"),
                     justifyContent: "center",
                     alignItems: "center",
                     paddingVertical: 0,
@@ -196,7 +199,7 @@ const AdminService = () => {
                   }}>
                   {/* Service name textbox  */}
                   <View flexDirection="row" style={{ justifyContent: "center", alignItems: "center" }}>
-                    <Text style={{ color: "#000", fontSize: 19, fontWeight: "bold" }}>Service name:</Text>
+                    <Text style={{ color: "#000", fontSize: 18.5, fontWeight: "bold" }}>Service name:</Text>
                     <TextInput style={styles.inputBox}
                       placeholder="eg. Hair-Cut"
                       placeholderTextColor="#000"
@@ -222,7 +225,7 @@ const AdminService = () => {
                   </View>
 
                   <Text style={{ color: "#000", fontSize: 19, fontWeight: "bold", marginRight: 220 }}>Service Duration:</Text>
-                  <View flexDirection="row" style={{ justifyContent: "center", alignItems: "center", marginVertical: 30 }}>
+                  <View flexDirection="row" style={{ justifyContent: "center", alignItems: "center", marginVertical: 20 }}>
                     <TouchableOpacity style={styles.pickerBox}>
                       <Picker style={{ color: "#000", fontSize: 17 }} selectedValue={selectedHour} onValueChange={(itemValue, itemIndex) => setselectedHour(itemValue)}>
                         {hour.map((key, index) => {
@@ -238,6 +241,7 @@ const AdminService = () => {
                       </Picker>
                     </TouchableOpacity>
                   </View>
+                  <Text style={{ color: "#000", fontSize: 10, marginBottom: 15 }}>__________________________________________________________________________________________</Text>
                   <View flexDirection="row" style={{ justifyContent: "center" }}>
                     <TouchableOpacity style={styles.button1} onPress={() => clearAddService()}>
                       <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold", textAlign: 'center' }} >Clear</Text>
@@ -249,7 +253,7 @@ const AdminService = () => {
                 </CardView>
 
                 <View flexDirection="row" style={{ justifyContent: "center" }}>
-                  <TouchableOpacity style={styles.button} onPress={() => { setallServiceScreen(false), setaddServiceScreen(false), setstatScreen(true) }}>
+                  <TouchableOpacity style={styles.button} onPress={() => { setallServiceScreen(false), setaddServiceScreen(false), setstatScreen(true), clearAddService() }}>
                     <Text style={styles.buttonText}>View Stats</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.button} onPress={() => { setallServiceScreen(true), setaddServiceScreen(false), setstatScreen(false), clearAddService() }}>
