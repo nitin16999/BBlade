@@ -8,7 +8,7 @@ class CustStore extends Component {
     return (
       <LinearGradient colors={['#fff', '#fff']} style={styles.container}>
         <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-        <Text style={styles.logoText}>Customer Store Page</Text>
+        <Text style={styles.logoText}>Book your Style</Text>
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Barbers')}>
           <Text style={{ fontSize: 17, color: '#000', fontWeight: "bold" }}>Select Barber</Text>
         </TouchableOpacity>

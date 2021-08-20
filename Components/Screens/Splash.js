@@ -12,7 +12,7 @@ class Splash extends Component {
       let userRole = await AsyncStorage.getItem("@user_role")
       let userId = await AsyncStorage.getItem("@user_id")
       if (userRole && userId) {
-        console.log("Available")
+        //console.log("Available")
         if (userRole == "Customer") {
           this.props.navigation.navigate("CustomerHome")
         } else if (userRole == "Barber") {
@@ -22,7 +22,7 @@ class Splash extends Component {
         }
       }
       else {
-        console.log('Not Available')
+        //console.log('Not Available')
         this.props.navigation.navigate('Main')
       }
     }, 2000)

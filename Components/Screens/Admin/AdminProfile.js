@@ -20,8 +20,6 @@ const AdminProfile = (props) => {
   //called every time page is refreshed
   useEffect(() => {
     getAsyncData()
-
-    console.log(auth().currentUser)
   }, []);
 
 
@@ -115,7 +113,7 @@ const AdminProfile = (props) => {
 
 
 
-  // This function used for loggin the user out of the application and deleted the local storage 
+  // This function used for log out the user out of the application and deleted the local storage 
   async function Logout() {
     Alert.alert(
       'Logout',

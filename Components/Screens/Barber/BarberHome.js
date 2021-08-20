@@ -13,12 +13,13 @@ function MyTabs() {
       activeColor="#fff"
       inactiveColor="#000"
       barStyle={{ backgroundColor: '#000' }}
+      shifting={true}
     >
       <Tab.Screen
         name="Menu"
         component={BarberMenu}
         options={{
-          tabBarLabel: 'Menu',
+          tabBarLabel: 'Work',
           tabBarIcon: () => (
             <MaterialCommunityIcons name="book-open" color={"#fff"} size={25} />
           ),

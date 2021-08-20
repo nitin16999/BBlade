@@ -76,42 +76,47 @@ export default class SignUp extends Component {
 
         // If the user is customer
         if (this.state.signUpMode == "Customer") {
-
             //checking for the error in the input fields
             if (this.nameValidate()) {
                 if (this.phoneValidate()) {
                     if (this.emailValidate()) {
                         if (this.passwordValidate()) {
                             //checking if firestore already has the email entry 
-                            const ID = await firestore().collection("Customer").where("email", "==", this.state.emailText).get();
-                            if (ID.empty) {
-                                //check if auth storage has similar email id  
-                                auth().createUserWithEmailAndPassword(this.state.emailText, this.state.password)
-                                    .then(async (cred) => {
-                                        try {
-                                            await AsyncStorage.setItem('@user_role', "Customer")
-                                            await AsyncStorage.setItem('@user_id', cred.user.uid)
-                                            firestore().collection("Customer").doc(cred.user.uid).set({
-                                                name: this.state.nameText,
-                                                email: this.state.emailText,
-                                                phone: this.state.phoneText
-                                            }).then(() => {
-                                                this.props.navigation.navigate("CustomerHome")
-                                            }).catch(() => {
-                                                Alert.alert("Something went wrong", "Plase check your network connect or please try again.")
-                                            })
+                            const ID1 = await firestore().collection("Admin").where("email", "==", this.state.emailText).get();
+                            if (ID1.empty) {
+                                const ID2 = await firestore().collection("Barber").where("email", "==", this.state.emailText).get();
+                                if (ID2.empty) {
+                                    const ID3 = await firestore().collection("Customer").where("email", "==", this.state.emailText).get();
+                                    if (ID3.empty) {
+                                        //check if auth storage has similar email id  
+                                        auth().createUserWithEmailAndPassword(this.state.emailText, this.state.password)
+                                            .then(async (cred) => {
+                                                try {
+                                                    await AsyncStorage.setItem('@user_role', "Customer")
+                                                    await AsyncStorage.setItem('@user_id', cred.user.uid)
+                                                    firestore().collection("Customer").doc(cred.user.uid).set({
+                                                        name: this.state.nameText,
+                                                        email: this.state.emailText,
+                                                        phone: this.state.phoneText
+                                                    }).then(() => {
+                                                        this.props.navigation.navigate("CustomerHome")
+                                                    }).catch(() => {
+                                                        Alert.alert("Something went wrong", "Plase check your network connect or please try again.")
+                                                    })
 
-                                        } catch (e) {
-                                            Alert.alert("Something went Wrong", "Plase check your network connect or please try again.")
-                                        }
-                                    })
-                                    .catch((error) => {
-                                        if (error.code == "auth/email-already-in-use") {
-                                            Alert.alert("Account already exist", "An account with this email address alredy exist. Please try with a new email address or try joining with this email by login method.")
-                                        }
-                                    })
-                            }
-                            else { Alert.alert("Account already exist", "An account with this email address alredy exist. Please try with a new email address or try joining with this email by login method.") }
+                                                } catch (e) {
+                                                    Alert.alert("Something went Wrong", "Plase check your network connect or please try again.")
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                if (error.code == "auth/email-already-in-use") {
+                                                    Alert.alert("Account already exist", "An account with this email address alredy exist. Please try with a new email address or try joining with this email by login method.")
+                                                }
+                                            })
+                                    }
+                                    else { Alert.alert("Account already exist", "An account with this email address alredy exist. Please try with a new email address or try joining with this email by login method.") }
+                                } else { Alert.alert("Account already exist", "An account with this email address alredy exist. Please try with a new email address or try joining with this email by login method.") }
+                            } else { Alert.alert("Account already exist", "An account with this email address alredy exist. Please try with a new email address or try joining with this email by login method.") }
                         } else { Alert.alert("Enter Valid Password ", "Please read the Password-Rules given bellow the password textbox. This is necessary to create a strong password for your account. " + this.state.password) }
                     } else { Alert.alert("Signup Failed", "Enter Valid Email please") }
                 } else { Alert.alert("Signup Failed", "Enter Valid Phone number Please.") }
@@ -132,7 +137,7 @@ export default class SignUp extends Component {
                                 try {
                                     await AsyncStorage.setItem('@user_role', "Barber")
                                     await AsyncStorage.setItem('@user_id', cred.user.uid)
-                                    firestore().collection("Customer").doc(this.state.emailText).set({
+                                    firestore().collection("Barber").doc(this.state.emailText).update({
                                         id: cred.user.uid
                                     }).then(() => {
                                         this.props.navigation.navigate("BarberHome")
@@ -145,11 +150,26 @@ export default class SignUp extends Component {
                             })
                             .catch((error) => {
                                 if (error.code == "auth/email-already-in-use") {
-                                    Alert.alert("Account already exist", "An account with this email address alredy exist. Please try to reset the password of this email address and again login.")
+                                    auth().signInWithEmailAndPassword(this.state.emailText, this.state.password)
+                                        .then(async (cread) => {
+                                            try {
+                                                await AsyncStorage.setItem('@user_role', "Barber")
+                                                await AsyncStorage.setItem('@user_id', cread.user.uid)
+                                                firestore().collection("Barber").doc(this.state.emailText).update({
+                                                    id: cread.user.uid
+                                                }).then(() => {
+                                                    this.props.navigation.navigate("BarberHome")
+                                                }).catch(() => {
+                                                    Alert.alert("Something went wrong", "Plase check your network connect or please try again.")
+                                                })
+                                            } catch (e) {
+                                                Alert.alert("Something went Wrong", "Plase check your network connect or please try again.")
+                                            }
+
+                                        }).catch((error) => Alert.alert("Signup Failed", error.message));
                                 }
                             })
                     }
-
                 } else { Alert.alert("Enter Valid Password ", "Please read the Password-Rules given bellow the password textbox. This is necessary to create a strong password for your account. " + this.state.password) }
             } else { Alert.alert("Signup Failed", "Enter Valid Email please") }
         }
@@ -327,5 +347,3 @@ const styles = StyleSheet.create({
         marginLeft: 30
     }
 });
-
-

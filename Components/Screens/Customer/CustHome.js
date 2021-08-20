@@ -10,17 +10,18 @@ const Tab = createMaterialBottomTabNavigator();
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Store"
+      initialRouteName="Book"
       activeColor="#fff"
       inactiveColor="#000"
       barStyle={{ backgroundColor: '#000' }}
+      shifting = {true}
     >
       <Tab.Screen
-        name="Store"
+        name="Book"
         component={Customer}
         options={{
           gestureEnabled: true, gestureDirection: 'horizontal',
-          tabBarLabel: 'Store',
+          tabBarLabel: 'Book',
           tabBarIcon: () => (
             <MaterialCommunityIcons name="storefront" color={"#fff"} size={25} />
           ),

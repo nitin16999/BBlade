@@ -241,7 +241,7 @@ const AdminService = () => {
                       </Picker>
                     </TouchableOpacity>
                   </View>
-                  <Text style={{ color: "#000", fontSize: 10, marginBottom: 15 }}>__________________________________________________________________________________________</Text>
+                  <Text style={{ color: "#000", fontSize: 10, marginBottom: 15, fontWeight: "bold" }}>__________________________________________________________________________________________</Text>
                   <View flexDirection="row" style={{ justifyContent: "center" }}>
                     <TouchableOpacity style={styles.button1} onPress={() => clearAddService()}>
                       <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold", textAlign: 'center' }} >Clear</Text>

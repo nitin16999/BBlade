@@ -58,18 +58,25 @@ const AdminBarber = () => {
         if (emailValidate()) {
           const userRole = await AsyncStorage.getItem('@user_role')
           if (userRole == "Admin") {
-            const service = await firestore().collection("Barber").where("email", "==", barberEMail).get();
-            if (service.empty) {
-              firestore().collection("Barber").doc(barberEMail).set({
-                name: barberName,
-                phone: barberNumber,
-                email: barberEMail
-              }).then(
-                Alert.alert("Process Completed", "New barber " + barberName + " is added to the barber's list."),
-                clearFields(),
-                getData()
-              ).catch((error) => { Alert.alert("Something went wrong", error.message) })
-            } else { Alert.alert("Process Failed!", "Barber With the same Email is already exist") }
+            const barber = await firestore().collection("Barber").where("email", "==", barberEMail).get();
+            if (barber.empty) {
+              const customer = await firestore().collection("Customer").where("email", "==", barberEMail).get();
+              if (customer.empty) {
+                const admin = await firestore().collection("Admin").where("email", "==", barberEMail).get();
+                if (admin.empty) {
+                  firestore().collection("Barber").doc(barberEMail).set({
+                    name: barberName,
+                    phone: barberNumber,
+                    email: barberEMail,
+                    id: null
+                  }).then(
+                    Alert.alert("Process Completed", "New barber with name " + barberName + " is added to the barber's list."),
+                    clearFields(),
+                    getData()
+                  ).catch((error) => { Alert.alert("Something went wrong", error.message) })
+                } else { Alert.alert("Process Failed!", "Account With the same Email id already exist in admin list") }
+              } else { Alert.alert("Process Failed!", "Account With the same Email id already exist in customer list") }
+            } else { Alert.alert("Process Failed!", "Barber With the same Email id already exist") }
           } else { Alert.alert("Something went wrong", "This account Don't have the premission to add services.") }
         } else { Alert.alert("Process Failed!", "Enter correct email address.") }
       } else { Alert.alert("Process Failed!", "Enter correct phone number.") }
@@ -80,6 +87,24 @@ const AdminBarber = () => {
     await firestore().collection("Barber").onSnapshot(snapshot => {
       setbarbers(snapshot.docs.map(doc => doc.data()))
     })
+  }
+
+  async function deleteData(email) {
+    Alert.alert(
+      'Delete!',
+      'Sure you want to delete ' + email + ' Barber?', [{
+        text: 'No',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel'
+      }, {
+        text: 'Yes',
+        onPress: () =>
+          firestore().collection("Barber").doc(email).delete().then(console.log("deleted")).catch((error) => { console.log(error.message) })
+      },], {
+      cancelable: false
+    }
+    )
+    // await firestore().collection("Service").doc(name).delete().then(console.log("deleted")).catch((error) => { console.log(error.message) });
   }
 
   return (
@@ -132,7 +157,7 @@ const AdminBarber = () => {
                           <Text style={{ color: "#000", fontSize: 22, fontWeight: "bold" }}>{value.email}</Text>
                         </View>
                         <View>
-                          <TouchableOpacity style={{ width: wp('24%'), backgroundColor: '#000', borderRadius: 25, paddingVertical: 8, alignSelf: 'center', marginTop: 20, marginHorizontal: 15 }} onPress={() => deleteData(value.name)}>
+                          <TouchableOpacity style={{ width: wp('24%'), backgroundColor: '#000', borderRadius: 25, paddingVertical: 8, alignSelf: 'center', marginTop: 20, marginHorizontal: 15 }} onPress={() => deleteData(value.email)}>
                             <Text style={{ color: "#fff", fontSize: 16, fontWeight: 'bold', textAlign: "center" }} >Delete</Text>
                           </TouchableOpacity>
                         </View>

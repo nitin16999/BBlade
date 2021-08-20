@@ -6,8 +6,8 @@ import LinearGradient from 'react-native-linear-gradient';
 class BarberMenu extends Component {
   render() {
     return (
-      <LinearGradient colors={['#fff', '#fff']} style={styles.container}>
-        <StatusBar backgroundColor="#000" barStyle="light-content" />
+      <LinearGradient colors={['#f1f1f1', '#fff']} style={styles.container}>
+        <StatusBar backgroundColor="#fff" barStyle="dark-content" />
         <Text style={styles.logoText}>Barber Menu Page</Text>
       </LinearGradient>
     );

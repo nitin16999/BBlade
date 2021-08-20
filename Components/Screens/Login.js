@@ -48,14 +48,28 @@ export default class Login extends Component {
                     Alert.alert("Login Failed", "This email isn't registered as a barber yet, please contact the admin for more details.")
                 }
                 else {
-                    auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-                        .then(async (cread) => {
-                            let uid = cread.user.uid;
-                            await AsyncStorage.setItem("@user_id", uid)
-                            await AsyncStorage.setItem("@user_role", this.state.loginMode)
-                            this.props.navigation.navigate("BarberHome")
-                        }).catch((error) => Alert.alert("Login Failed", error.message));
-
+                    data.docs.map(d => {
+                        if (d.data().id == null) {
+                            Alert.alert("Login Failed", "This email isn't registered as a barber yet, please signup first.")
+                        }
+                        else {
+                            auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+                                .then(async (cread) => {
+                                    let uid = cread.user.uid;
+                                    await AsyncStorage.setItem("@user_id", uid)
+                                    await AsyncStorage.setItem("@user_role", this.state.loginMode)
+                                    // firestore().collection("Barber").doc(this.state.emailText).update({
+                                    //     id: uid
+                                    // }).then(() => {
+                                    //     this.props.navigation.navigate("BarberHome")
+                                    // }).catch((err) => {
+                                    //     //Alert.alert("Something went wrong", "Plase check your network connect or please try again.")
+                                    //     Alert.alert("Something went wrong", err.message)
+                                    // })
+                                    this.props.navigation.navigate("BarberHome")
+                                }).catch((error) => Alert.alert("Login Failed", error.message));
+                        }
+                    })
                 }
             }
             else {

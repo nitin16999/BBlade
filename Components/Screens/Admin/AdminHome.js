@@ -2,19 +2,31 @@ import React, { Component } from 'react';
 import { BackHandler } from 'react-native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Service from "./AdminService"
 import Barber from "./AdminBarber"
 import Profile from "./AdminProfile"
+import Schedule from "./Schedule"
 const Tab = createMaterialBottomTabNavigator();
 
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Service"
+      initialRouteName="Schedule"
       activeColor="#fff"
       inactiveColor="#000"
       barStyle={{ backgroundColor: '#000' }}
     >
+      <Tab.Screen
+        name="Schedule"
+        component={Schedule}
+        options={{
+          tabBarLabel: ' Schedule',
+          tabBarIcon: () => (
+            <MaterialIcons name="schedule" color={"#fff"} size={25} />
+          ),
+        }}
+      />
       <Tab.Screen
         name="Service"
         component={Service}
