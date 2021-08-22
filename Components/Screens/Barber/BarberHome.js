@@ -9,14 +9,14 @@ const Tab = createMaterialBottomTabNavigator();
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Menu"
+      initialRouteName="Work"
       activeColor="#fff"
       inactiveColor="#000"
       barStyle={{ backgroundColor: '#000' }}
       shifting={true}
     >
       <Tab.Screen
-        name="Menu"
+        name="Work"
         component={BarberMenu}
         options={{
           tabBarLabel: 'Work',

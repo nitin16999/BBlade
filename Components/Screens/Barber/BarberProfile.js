@@ -28,8 +28,10 @@ const BarberProfile = (props) => {
   const [serviceType, setserviceType] = useState('Shift 1')
 
   useEffect(() => {
+
     getAsyncData()
     getSchedule()
+
   }, []);
 
   async function getAsyncData() {
@@ -138,22 +140,60 @@ const BarberProfile = (props) => {
       Alert.alert("Process Failed!", 'Please select a date')
     }
     else {
-      const date = await firestore().collection("BarberSchedule").where('email', '==', email).where('date', '==', Date(chosenDate)).get();
+      const date = await firestore().collection("BarberSchedule").where('email', '==', email).where('date', '==', new Date(chosenDate)).get();
       if (date.empty) {
-        firestore().collection('BarberSchedule').doc(email).set({
-          email: email,
-          name: name,
-          phone: phoneNo,
-          date: Date(chosenDate),
-          status: serviceType,
-          dateString: moment(Date(chosenDate)).format('MMMM DD, YYYY')
-        }).then(
-          Alert.alert('Custom schedule added', 'Custom schedule is been added to schedule list with date: ' + chosenDate),
-          getSchedule()
-        ).catch((err) => {
-          console.log(err.message)
-        })
-        clear()
+
+        if (serviceType == 'Leave') {
+          firestore().collection('BarberSchedule').doc(email + moment(chosenDate).format('MMMM DD, YYYY')).set({
+            email: email,
+            name: name,
+            phone: phoneNo,
+            date: new Date(chosenDate),
+            shift1: serviceType,
+            shift2: serviceType,
+            dateString: moment(chosenDate).format('MMMM DD, YYYY')
+          }).then(
+            Alert.alert('Custom schedule added', 'Custom schedule is been added to schedule list with date: ' + chosenDate),
+            getSchedule()
+          ).catch((err) => {
+            console.log(err.message)
+          })
+          clear()
+        }
+        if (serviceType == 'Shift 1') {
+          firestore().collection('BarberSchedule').doc(email + moment(chosenDate).format('MMMM DD, YYYY')).set({
+            email: email,
+            name: name,
+            phone: phoneNo,
+            date: new Date(chosenDate),
+            shift1: 'Available',
+            shift2: 'Leave',
+            dateString: moment(chosenDate).format('MMMM DD, YYYY')
+          }).then(
+            Alert.alert('Custom schedule added', 'Custom schedule is been added to schedule list with date: ' + chosenDate),
+            getSchedule()
+          ).catch((err) => {
+            console.log(err.message)
+          })
+          clear()
+        }
+        if (serviceType == 'Shift 2') {
+          firestore().collection('BarberSchedule').doc(email + moment(chosenDate).format('MMMM DD, YYYY')).set({
+            email: email,
+            name: name,
+            phone: phoneNo,
+            date: new Date(chosenDate),
+            shift1: 'Leave',
+            shift2: 'Available',
+            dateString: moment(chosenDate).format('MMMM DD, YYYY')
+          }).then(
+            Alert.alert('Custom schedule added', 'Custom schedule is been added to schedule list with date: ' + chosenDate),
+            getSchedule()
+          ).catch((err) => {
+            console.log(err.message)
+          })
+          clear()
+        }
       }
       else {
         Alert.alert('Process failed!', 'Schedule with the same date already exist, delete that to add new one.')
@@ -163,10 +203,17 @@ const BarberProfile = (props) => {
 
   async function getSchedule() {
     //get custom schedule if any
-    await firestore().collection("BarberSchedule").where('email', '==', email).onSnapshot(snapshot => {
-      setdata(snapshot.docs.map(doc => doc.data()))
-    })
-
+    const userRole = await AsyncStorage.getItem('@user_role')
+    const userId = await AsyncStorage.getItem('@user_id')
+    if (userRole == "Barber") {
+      firestore().collection(userRole).where('id', "==", userId).get().then(doc => {
+        doc.forEach(doc => {
+          firestore().collection("BarberSchedule").where('email', '==', doc.data().email).onSnapshot(snapshot => {
+            setdata(snapshot.docs.map(doc => doc.data()))
+          })
+        })
+      })
+    }
     //deleting the previous schedule date
     var ans = await firestore().collection("BarberSchedule").where('date', '<', new Date(moment().format('MMMM DD, YYYY')));
     ans.get().then(function (querySnapshot) {
@@ -186,22 +233,27 @@ const BarberProfile = (props) => {
       }, {
         text: 'Yes',
         onPress: () => {
-          var ans = firestore().collection("BarberSchedule").where('email', '==', email).where('dateString', '==', value.dateString);
-          ans.get().then(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-              doc.ref.delete();
+          if (value.dateString == moment().add(0, 'days').format('MMMM DD, YYYY')) {
+            Alert.alert('Process denied!', 'Schedule of today and tomorrow can not be deleted')
+          }
+          else if (value.dateString == moment().add(1, 'days').format('MMMM DD, YYYY')) {
+            Alert.alert('Process denied!', 'Schedule of today and tomorrow can not be deleted')
+          }
+          else {
+            var ans = firestore().collection("BarberSchedule").where('email', '==', email).where('dateString', '==', value.dateString);
+            ans.get().then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                doc.ref.delete();
+              });
             });
-          });
-          getSchedule()
+            getSchedule()
+          }
         }
-
       },], {
       cancelable: false
     }
     )
   }
-
-
 
   // Component created to display the user data and it is called in the main return function
   const Info = () => {
@@ -341,8 +393,8 @@ const BarberProfile = (props) => {
                   <Text style={{ color: "#000", fontWeight: 'bold', fontSize: 22, marginRight: 0 }}>Service state:</Text>
                   <TouchableOpacity style={styles.pickerBox}>
                     <Picker style={{ color: "#000", fontSize: 17 }} selectedValue={serviceType} onValueChange={(itemValue, itemIndex) => { setserviceType(itemValue) }}>
-                      <Picker.Item style={{ color: "#fff", fontSize: 17 }} label="Shift 1" value="Shift 1" />
-                      <Picker.Item style={{ color: "#fff", fontSize: 17 }} label="Shift 2" value="Shift 2" />
+                      <Picker.Item style={{ color: "#fff", fontSize: 17 }} label="Only Shift 1" value="Shift 1" />
+                      <Picker.Item style={{ color: "#fff", fontSize: 17 }} label="Only Shift 2" value="Shift 2" />
                       <Picker.Item style={{ color: "#fff", fontSize: 17 }} label="Leave" value="Leave" />
                     </Picker>
                   </TouchableOpacity>
@@ -375,6 +427,7 @@ const BarberProfile = (props) => {
                   marginHorizontal: 10
                 }}
               >
+
                 <ScrollView nestedScrollEnabled={true}>
                   {
                     data.map((value) => {
@@ -398,9 +451,13 @@ const BarberProfile = (props) => {
                               <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.dateString}</Text>
                             </View>
                             <Text style={{ color: "#000", fontSize: 10, fontWeight: "bold" }}>_________________________________________________________________________________</Text>
-                            <View flexDirection='row' style={{ paddingBottom: 10 }}>
-                              <Text style={{ color: '#000', fontSize: 22 }}>Status: </Text>
-                              <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 22 }}>{value.status}</Text>
+                            <View flexDirection='row' style={{ paddingBottom: 0 }}>
+                              <Text style={{ color: '#000', fontSize: 22 }}>Shift 1: </Text>
+                              <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 22 }}>{value.shift1}</Text>
+                            </View>
+                            <View flexDirection='row' style={{ paddingBottom: 0 }}>
+                              <Text style={{ color: '#000', fontSize: 22 }}>Shift 2: </Text>
+                              <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 22 }}>{value.shift2}</Text>
                             </View>
                             <View>
                               <TouchableOpacity style={{ width: wp('24%'), backgroundColor: '#000', borderRadius: 25, paddingVertical: 8, alignSelf: 'center', marginTop: 20, marginHorizontal: 15 }} onPress={() => deleteData(value)}>
@@ -412,7 +469,6 @@ const BarberProfile = (props) => {
                       )
                     })
                   }
-
                 </ScrollView>
               </CardView>
               <View flexDirection='row' style={{ alignItems: "center", justifyContent: "center" }}>
@@ -476,7 +532,7 @@ const styles = StyleSheet.create({
     width: wp('40%'),
     backgroundColor: 'rgba(40, 40,40,0.15)',
     borderRadius: 25,
-    paddingHorizontal: 10,
+    paddingLeft: 5,
     color: '#fff',
     marginLeft: 5
   }

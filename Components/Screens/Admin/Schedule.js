@@ -115,10 +115,10 @@ const Schedule = () => {
                 else {
                     firestore().collection("Schedule").doc("Today").set({
                         date: new Date(moment().format('MMMM DD, YYYY')),
-                        Shift1: null,
-                        Break: null,
-                        Shift2: null,
-                        End: null,
+                        Shift1: [0,0],
+                        Break: [0,0],
+                        Shift2: [0,0],
+                        End: [0,0],
                         Open: open
                     }).then(() => {
                         console.log("Added custom time schedule")
@@ -180,10 +180,10 @@ const Schedule = () => {
                 else {
                     firestore().collection("Schedule").doc("Tomorrow").set({
                         date: new Date(moment().add(1, 'days').format('MMMM DD, YYYY')),
-                        Shift1: null,
-                        Break: null,
-                        Shift2: null,
-                        End: null,
+                        Shift1: [0, 0],
+                        Break: [0, 0],
+                        Shift2: [0, 0],
+                        End: [0, 0],
                         Open: false
                     }).then(() => {
                         console.log("Added custom time schedule")

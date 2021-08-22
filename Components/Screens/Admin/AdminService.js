@@ -14,10 +14,10 @@ const AdminService = () => {
   const [addServiceScreen, setaddServiceScreen] = useState(true)
   const [serviceName, setserviceName] = useState("")
   const [servicePrice, setservicePrice] = useState("")
-  const [hour] = useState(['0', '1', '2', '3'])
-  const [min] = useState(['0', '15', '30', '45'])
-  const [selectedHour, setselectedHour] = useState("0")
-  const [selectedMin, setselectedMin] = useState("0")
+  const [hour] = useState([0, 1, 2, 3])
+  const [min] = useState([0, 15, 30, 45])
+  const [selectedHour, setselectedHour] = useState(0)
+  const [selectedMin, setselectedMin] = useState(0)
   const [data, setdata] = useState([])
 
   useEffect(() => {
@@ -27,8 +27,8 @@ const AdminService = () => {
   function clearAddService() {
     setserviceName("")
     setservicePrice("")
-    setselectedHour('0')
-    setselectedMin('0')
+    setselectedHour(0)
+    setselectedMin()
   }
 
   async function getData() {
@@ -75,7 +75,7 @@ const AdminService = () => {
                   firestore().collection("Service").doc(serviceName).set({
                     name: serviceName,
                     price: servicePrice,
-                    timeDuration: selectedHour + "hr " + selectedMin + "min"
+                    timeDuration: [selectedHour, selectedMin]
                   }).then(
                     Alert.alert("Process Completed", "New " + serviceName + " is been added to the Customer menu."),
                     clearAddService(),
@@ -83,7 +83,7 @@ const AdminService = () => {
                   ).catch((error) => {
                     Alert.alert("Something went wrong", error.message)
                   })
-                  
+
                 } else {
                   Alert.alert("Action Failed!", "Service with the same name is already available")
                 }
@@ -131,7 +131,7 @@ const AdminService = () => {
               }}>
               <ScrollView nestedScrollEnabled={true}>
                 {
-                  data.map((value) => {
+                  data.map((value, index) => {
                     return (
                       <CardView
                         flex={1}
@@ -151,11 +151,11 @@ const AdminService = () => {
                         <Text style={{ color: "#000", fontSize: 10 }}>______________________________________________________________________</Text>
                         <View flexDirection="row">
                           <Text style={{ color: "#000", fontSize: 22 }}>Price: </Text>
-                          <Text style={{ color: "#000", fontSize: 22, fontWeight: "bold" }}>{value.price}</Text>
+                          <Text style={{ color: "#000", fontSize: 22, fontWeight: "bold" }}>{value.price} Rs.</Text>
                         </View>
                         <View flexDirection="row">
                           <Text style={{ color: "#000", fontSize: 22 }}>Time Duration: </Text>
-                          <Text style={{ color: "#000", fontSize: 22, fontWeight: "bold" }}>{value.timeDuration}</Text>
+                          <Text style={{ color: "#000", fontSize: 22, fontWeight: "bold" }}>{value.timeDuration[0]}:{value.timeDuration[1]} hr</Text>
                         </View>
                         <View>
                           <TouchableOpacity style={{ width: wp('24%'), backgroundColor: '#000', borderRadius: 25, paddingVertical: 8, alignSelf: 'center', marginTop: 20, marginHorizontal: 15 }} onPress={() => deleteData(value.name)}>
