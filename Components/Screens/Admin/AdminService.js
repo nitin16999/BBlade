@@ -167,7 +167,7 @@ const AdminService = () => {
                     )
                   })
                 }
-                <Text>{data.name}</Text>
+                
               </ScrollView>
             </CardView>
             <View flexDirection="row" style={{ justifyContent: "center" }}>

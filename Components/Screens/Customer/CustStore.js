@@ -24,7 +24,7 @@ const CustStore = (props) => {
 
   async function findBarber() {
     if (8 <= moment().format('HH')) {
-      if (moment().format('HH') < 21) {
+      if (moment().format('HH') < 20) {
         firestore().collection('Schedule').doc(day).get().then(doc => {
           if (doc.exists) {
             if (doc.data().Open) {
@@ -78,6 +78,7 @@ const CustStore = (props) => {
             }
             else {
               Alert.alert('Salon is closed ' + day)
+              setbarbers([])
             }
           }
           else {
@@ -86,11 +87,11 @@ const CustStore = (props) => {
         })
       }
       else {
-        Alert.alert('Booking service is open from 8am to 9 pm only.')
+        Alert.alert('Booking service is open from 8am to 8pm only.')
       }
     }
     else {
-      Alert.alert('Booking service is open from 8am to 9 pm only.')
+      Alert.alert('Booking service is open from 8am to 8pm only.')
     }
   }
 
@@ -107,6 +108,8 @@ const CustStore = (props) => {
       day: day,
       time: time,
     }
+    clear()
+    barbers.splice(0, barbers.length)
     props.navigation.navigate("Booking", { data })
   }
 
@@ -154,8 +157,8 @@ const CustStore = (props) => {
                   <Text style={{ color: '#000', fontSize: 20, fontWeight: 'bold' }}>Select time:</Text>
                   <TouchableOpacity style={styles.pickerBox}>
                     <Picker style={{ color: "#000", fontSize: 17 }} selectedValue={time} onValueChange={(itemValue, itemIndex) => { settime(itemValue) }}>
-                      <Picker.Item style={{ color: "#fff", fontSize: 17 }} label="Morning-afternoon" value="Morning" />
-                      <Picker.Item style={{ color: "#fff", fontSize: 17 }} label="Evening-night" value="Evening" />
+                      <Picker.Item style={{ color: "#fff", fontSize: 17 }} label="Morning-afternoon" value='Morning' />
+                      <Picker.Item style={{ color: "#fff", fontSize: 17 }} label="Evening-night" value='Evening' />
                     </Picker>
                   </TouchableOpacity>
                 </View>

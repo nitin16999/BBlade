@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, StatusBar, TouchableOpacity, Alert, View, ScrollView, TextInput } from 'react-native';
+import { StyleSheet, Text, StatusBar, TouchableOpacity, View, ScrollView } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import CardView from 'react-native-cardview';
 import LinearGradient from 'react-native-linear-gradient';
@@ -12,9 +12,12 @@ const BarberMenu = (props) => {
   const [todayShift2, settodayShift2] = useState(null)
   const [tomorrowShift1, settomorrowShift1] = useState(null)
   const [tomorrowShift2, settomorrowShift2] = useState(null)
+  const [data, setdata] = useState([])
+  const [email, setemail] = useState(null)
 
   useEffect(() => {
     setSchedule()
+    getData()
   }, []);
 
   async function setSchedule() {
@@ -107,36 +110,110 @@ const BarberMenu = (props) => {
     }
   }
 
-
-  async function getSchedule() {
+  async function getData() {
     const userRole = await AsyncStorage.getItem('@user_role')
     const userId = await AsyncStorage.getItem('@user_id')
     if (userRole == "Barber") {
       firestore().collection(userRole).where('id', "==", userId).get().then(doc => {
         doc.forEach(doc => {
-          firestore().collection('BarberSchedule').where('email', '==', doc.data().email).where('dateString', '==', moment().format('MMMM DD, YYYY')).get().then(doc => {
-            doc.forEach(data => {
-              settodayShift1(data.data().shift1)
-              settodayShift2(data.data().shift2)
-            })
-          })
-          firestore().collection('BarberSchedule').where('email', '==', doc.data().email).where('dateString', '==', moment().add(1, 'days').format('MMMM DD, YYYY')).get().then(doc => {
-            doc.forEach(data => {
-              settomorrowShift1(data.data().shift1)
-              settomorrowShift2(data.data().shift2)
-            })
-          })
+          setemail(doc.data().email)
         })
       })
     }
+    firestore().collection('Booking').where('BarberEmail', '==', email).where('date', '==', moment().add(1, 'days').format('MMMM DD, YYYY')).onSnapshot(snapshot => {
+      setdata(snapshot.docs.map(doc => doc.data()))
+    })
   }
 
+
+
+
   return (
-    <LinearGradient colors={['#f1f1f1', '#fff']} style={styles.container}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+    <LinearGradient colors={['#DFDFDF', '#fff']} style={styles.container}>
+      <StatusBar backgroundColor="#000" barStyle="light-content" />
+      <CardView
+        cardElevation={10}
+        cornerRadius={40}
+        style={{
+          width: wp("95%"),
+          height: hp("70%"),
+          backgroundColor: "#fff",
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <Text style={styles.logoText}>Booking History</Text>
+        <CardView
+          cardElevation={10}
+          cornerRadius={40}
+          style={{
+            width: wp("90%"),
+            height: hp("60%"),
+            backgroundColor: "#DFDFDF",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+          <ScrollView nestedScrollEnabled={true}>
+            {
+              data.map((value, index) => {
+                return (
+                  <CardView
+                    flex={1}
+                    cardElevation={10}
+                    cornerRadius={40}
+                    style={{
+                      width: wp("80%"),
+                      height: hp("25%"),
+                      justifyContent: 'flex-start',
+                      alignItems: "flex-start",
+                      paddingVertical: 0,
+                      marginVertical: 25,
+                      marginHorizontal: 8,
+                      backgroundColor: "#fff"
+                    }}>
+                    <View style={{ paddingLeft: 20, paddingTop: 15 }}>
+                      <View flexDirection='row'>
+                        <Text style={{ color: '#000', fontSize: 22 }}>Barber Name: </Text>
+                        <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.BarberName}</Text>
+                      </View>
+                      <View flexDirection='row'>
+                        <Text style={{ color: '#000', fontSize: 22 }}>Barber Phone no: </Text>
+                        <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.BarberPhone}</Text>
+                      </View>
+                      <View flexDirection='row'>
+                        <Text style={{ color: '#000', fontSize: 22 }}>Service Name: </Text>
+                        <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.ServiceName}</Text>
+                      </View>
+                      <View flexDirection='row'>
+                        <Text style={{ color: '#000', fontSize: 22 }}>Service Price: </Text>
+                        <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.ServicePrice}</Text>
+                      </View>
+                      <View flexDirection='row'>
+                        <Text style={{ color: '#000', fontSize: 22 }}>Start time: </Text>
+                        <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.serviceStartTime[0]}:{value.serviceStartTime[1]} (24 hr.)</Text>
+                      </View>
+                      <View flexDirection='row'>
+                        <Text style={{ color: '#000', fontSize: 22 }}>Payment Id: </Text>
+                        <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.id}</Text>
+                      </View>
+                      <View flexDirection='row'>
+                        <Text style={{ color: '#000', fontSize: 22 }}>date: </Text>
+                        <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.date}</Text>
+                      </View>
+                    </View>
+                  </CardView>
+                )
+              })
+            }
 
+          </ScrollView>
+        </CardView>
+      </CardView>
 
+      <TouchableOpacity style={{ width: wp('30%'), backgroundColor: '#000', borderRadius: 25, paddingVertical: 9, alignSelf: 'center', justifyContent: 'center', marginTop: 30 }} onPress={() => getData()}>
+        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', alignSelf: 'center' }}>Reffresh</Text>
+      </TouchableOpacity>
     </LinearGradient>
+
   );
 }
 
