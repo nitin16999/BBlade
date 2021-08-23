@@ -51,6 +51,10 @@ const Schedule = () => {
     useEffect(() => {
         storeSchedule();
         getData();
+        storeSchedule();
+        getData();
+        storeSchedule();
+        getData();
     }, [])
 
     async function getData() {

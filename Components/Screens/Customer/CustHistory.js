@@ -20,12 +20,12 @@ const CustHistory = () => {
     const userId = await AsyncStorage.getItem('@user_id')
     if (userRole == "Customer") {
       firestore().collection(userRole).doc(userId).get().then(doc => {
-        setemail(doc.data().email)
+        firestore().collection('Booking').where('CustEmail', '==', doc.data().email).onSnapshot(snapshot => {
+          setdata(snapshot.docs.map(doc => doc.data()))
+        })
       })
     }
-    firestore().collection('Booking').where('CustEmail', '==', email).onSnapshot(snapshot => {
-      setdata(snapshot.docs.map(doc => doc.data()))
-    })
+
   }
 
   return (

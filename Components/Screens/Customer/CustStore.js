@@ -211,6 +211,7 @@ const CustStore = (props) => {
                             backgroundColor: "#fff",
                             justifyContent: "center",
                             alignItems: "center",
+                            marginBottom: 10
                           }}>
                           <View style={{ alignItems: 'flex-start' }}>
                             <Text style={{ color: '#000', fontWeight: '900', fontSize: 22 }}>Barber Name: {value.name}</Text>

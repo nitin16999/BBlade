@@ -120,7 +120,7 @@ const BarberMenu = (props) => {
         })
       })
     }
-    firestore().collection('Booking').where('BarberEmail', '==', email).where('date', '==', moment().add(1, 'days').format('MMMM DD, YYYY')).onSnapshot(snapshot => {
+    firestore().collection('Booking').where('BarberEmail', '==', email).where('date', '==', moment().format('MMMM DD, YYYY')).onSnapshot(snapshot => {
       setdata(snapshot.docs.map(doc => doc.data()))
     })
   }
@@ -172,11 +172,11 @@ const BarberMenu = (props) => {
                     }}>
                     <View style={{ paddingLeft: 20, paddingTop: 15 }}>
                       <View flexDirection='row'>
-                        <Text style={{ color: '#000', fontSize: 22 }}>Barber Name: </Text>
+                        <Text style={{ color: '#000', fontSize: 22 }}>Customer Name: </Text>
                         <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.CustName}</Text>
                       </View>
                       <View flexDirection='row'>
-                        <Text style={{ color: '#000', fontSize: 22 }}>Barber Phone no: </Text>
+                        <Text style={{ color: '#000', fontSize: 22 }}>Customer Phone no: </Text>
                         <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.CustPhone}</Text>
                       </View>
                       <View flexDirection='row'>

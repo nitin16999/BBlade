@@ -20,7 +20,7 @@ const Booking = ({ route, navigation }) => {
 
   function serviceSelected(value) {
     setservicePrice(value.price)
-    setserviceTime(value.timeDuration)
+    setserviceTimeDuration(value.timeDuration)
   }
 
   function navigate() {
