@@ -48,7 +48,7 @@ const Booking = ({ route, navigation }) => {
     }
 
     if (route.params.data.day == 'Today') {
-      if (route.params.data.time == 'Morinig') {
+      if (route.params.data.time == 'Morning') {
         if (route.params.data.barber.shift1Time >= (serviceTimeDuration[0] * 60 + serviceTimeDuration[1])) {
 
           firestore().collection('Schedule').doc('Today').get().then(doc => {
@@ -57,12 +57,12 @@ const Booking = ({ route, navigation }) => {
             var diff = doc.data().Break[0] * 60 + doc.data().Break[1] - doc.data().Shift1[0] * 60 + doc.data().Shift1[1] // 300
             var barbertime = route.params.data.barber.shift1Time // 300
             var ans = (startTime + (diff - barbertime)) / 60 // 9
-            var n1 = Math.abs(ans) - Math.floor(ans);
+            var n1 = (Math.abs(ans) - Math.floor(ans)) * 60;
             var n2 = Math.floor(ans);
             var serviceStartTime = [n2, n1]
             //end time
             var variable = (startTime + (serviceTimeDuration[0] * 60 + serviceTimeDuration[1])) / 60
-            var n3 = Math.abs(variable) - Math.floor(variable);
+            var n3 = Math.abs(variable) - Math.floor(variable) * 60;
             var n4 = Math.floor(variable);
             var serviceEndTime = [n4, n3]
             //new shift 1 time for barber
@@ -127,7 +127,7 @@ const Booking = ({ route, navigation }) => {
             var diff = doc.data().End[0] * 60 + doc.data().End[1] - doc.data().Shift2[0] * 60 + doc.data().Shift2[1] // 300
             var barbertime = route.params.data.barber.shift2Time // 300
             var ans = (startTime + (diff - barbertime)) / 60 // 9
-            var n1 = Math.abs(ans) - Math.floor(ans);
+            var n1 = (Math.abs(ans) - Math.floor(ans) )* 60;
             var n2 = Math.floor(ans);
             var serviceStartTime = [n2, n1]
             //end time
@@ -200,7 +200,7 @@ const Booking = ({ route, navigation }) => {
             var diff = doc.data().Break[0] * 60 + doc.data().Break[1] - doc.data().Shift1[0] * 60 + doc.data().Shift1[1] // 300
             var barbertime = route.params.data.barber.shift1Time // 300
             var ans = (startTime + (diff - barbertime)) / 60 // 9
-            var n1 = Math.abs(ans) - Math.floor(ans);
+            var n1 = (Math.abs(ans) - Math.floor(ans)) * 60;
             var n2 = Math.floor(ans);
             var serviceStartTime = [n2, n1]
             //end time
@@ -267,7 +267,7 @@ const Booking = ({ route, navigation }) => {
             var diff = doc.data().End[0] * 60 + doc.data().End[1] - doc.data().Shift2[0] * 60 + doc.data().Shift2[1]
             var barbertime = route.params.data.barber.shift2Time
             var ans = (startTime + (diff - barbertime)) / 60
-            var n1 = Math.abs(ans) - Math.floor(ans);
+            var n1 = (Math.abs(ans) - Math.floor(ans)) * 60;
             var n2 = Math.floor(ans);
             var serviceStartTime = [n2, n1]
             //end time

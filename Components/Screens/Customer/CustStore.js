@@ -114,7 +114,7 @@ const CustStore = (props) => {
   }
 
   return (
-    <ScrollView>
+    <ScrollView nestedScrollEnabled={true}>
       <LinearGradient colors={['#DFDFDF', '#fff']} style={styles.container}>
         <StatusBar backgroundColor="#fff" barStyle="dark-content" />
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -198,35 +198,37 @@ const CustStore = (props) => {
                   justifyContent: "center",
                   alignItems: "center",
                 }}>
-                {
-                  barbers.map((value, index) => {
-                    return (
-                      <>
-                        <CardView
-                          cardElevation={10}
-                          cornerRadius={40}
-                          style={{
-                            width: wp("85%"),
-                            height: hp("17%"),
-                            backgroundColor: "#fff",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            marginBottom: 10
-                          }}>
-                          <View style={{ alignItems: 'flex-start' }}>
-                            <Text style={{ color: '#000', fontWeight: '900', fontSize: 22 }}>Barber Name: {value.name}</Text>
-                            <Text style={{ color: '#000', fontWeight: '900', fontSize: 22 }}>Barber Phone number: {value.phone}</Text>
-                          </View>
-                          <View style={{ alignItems: 'center', paddingTop: 10 }}>
-                            <TouchableOpacity style={{ width: wp('30%'), backgroundColor: '#000', borderRadius: 25, paddingVertical: 9, alignSelf: 'center', justifyContent: 'center' }} onPress={() => proceed(value)}>
-                              <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', alignSelf: 'center' }}>Proceed</Text>
-                            </TouchableOpacity>
-                          </View>
-                        </CardView>
-                      </>
-                    )
-                  })
-                }
+                <ScrollView nestedScrollEnabled={true}>
+                  {
+                    barbers.map((value, index) => {
+                      return (
+                        <>
+                          <CardView
+                            cardElevation={10}
+                            cornerRadius={40}
+                            style={{
+                              width: wp("85%"),
+                              height: hp("17%"),
+                              backgroundColor: "#fff",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              marginBottom: 10
+                            }}>
+                            <View style={{ alignItems: 'flex-start' }}>
+                              <Text style={{ color: '#000', fontWeight: '900', fontSize: 22 }}>Barber Name: {value.name}</Text>
+                              <Text style={{ color: '#000', fontWeight: '900', fontSize: 22 }}>Barber Phone number: {value.phone}</Text>
+                            </View>
+                            <View style={{ alignItems: 'center', paddingTop: 10 }}>
+                              <TouchableOpacity style={{ width: wp('30%'), backgroundColor: '#000', borderRadius: 25, paddingVertical: 9, alignSelf: 'center', justifyContent: 'center' }} onPress={() => proceed(value)}>
+                                <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', alignSelf: 'center' }}>Proceed</Text>
+                              </TouchableOpacity>
+                            </View>
+                          </CardView>
+                        </>
+                      )
+                    })
+                  }
+                </ScrollView>
               </CardView>
             </CardView>
           </View>
