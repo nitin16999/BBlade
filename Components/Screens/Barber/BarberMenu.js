@@ -173,11 +173,11 @@ const BarberMenu = (props) => {
                     <View style={{ paddingLeft: 20, paddingTop: 15 }}>
                       <View flexDirection='row'>
                         <Text style={{ color: '#000', fontSize: 22 }}>Barber Name: </Text>
-                        <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.BarberName}</Text>
+                        <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.CustName}</Text>
                       </View>
                       <View flexDirection='row'>
                         <Text style={{ color: '#000', fontSize: 22 }}>Barber Phone no: </Text>
-                        <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.BarberPhone}</Text>
+                        <Text style={{ color: '#000', fontSize: 22, fontWeight: 'bold' }}>{value.CustPhone}</Text>
                       </View>
                       <View flexDirection='row'>
                         <Text style={{ color: '#000', fontSize: 22 }}>Service Name: </Text>
